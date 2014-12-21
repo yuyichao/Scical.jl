@@ -16,6 +16,51 @@
 
 module Scical
 
-include("formatter.jl")
+function _convert_mod_path(mod::Symbol)
+    return string(mod)
+end
+
+function _convert_mod_path(mod::Expr)
+    if mod.head != :(.)
+        error("Invalid module path.")
+    end
+    return string(_convert_mod_path(mod.args[1]), "/", mod.args[2])
+end
+
+const _included_files = Set{String}()
+
+macro _include_sub(mod)
+    mod_path = string(_convert_mod_path(mod), ".jl")
+    cur_file = current_module().eval(:(@__FILE__))
+    full_path = abspath(joinpath(dirname(cur_file), mod_path))
+    if full_path in _included_files
+        quote
+        end
+    else
+        push!(_included_files, full_path)
+        quote
+            $(esc(:include))($mod_path)
+        end
+    end
+end
+
+const _init_hooks = Any[]
+
+function __init__()
+    for f in _init_hooks
+        f()
+    end
+end
+
+macro _init_func(ex)
+    quote
+        push!(_init_hooks, ($(esc(ex))))
+    end
+end
+
+@_include_sub formatter
+@_include_sub units
+@_include_sub _const
+@_include_sub atomic
 
 end
