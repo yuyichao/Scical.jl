@@ -44,7 +44,7 @@ macro _def_scaled_units(baseval, basesym::String, basename::String)
             name = "$prename $basename"
         end
         push!(ex.args, quote
-              @physics_const $(esc(Symbol(sym))) $name ($preval * $baseval)
+              @phy_const $(esc(Symbol(sym))) $name ($preval * $baseval)
               end)
     end
     return ex
@@ -70,28 +70,28 @@ end
 @_def_scaled_units 1 "Pa" "Pascal"
 @_def_scaled_units 1e-3 "L" "liter"
 
-@physics_const D "Debye" 1e-21 / c
+@phy_const D "Debye" 1e-21 / c
 
-@physics_const ft "foot" 0.3048
-@physics_const inch "inch" 25.4e-3
-@physics_const yd "yard" 3 * ft
-@physics_const mile "mile" 5280 * ft
+@phy_const ft "foot" 0.3048
+@phy_const inch "inch" 25.4e-3
+@phy_const yd "yard" 3 * ft
+@phy_const mile "mile" 5280 * ft
 
-@physics_const minute "minute" 60.
-@physics_const hour "hour" 3600.
-@physics_const day "day" 24 * hour
-@physics_const week "week" 7 * day
-@physics_const month "month" 30 * day
-@physics_const yr "year" 365 * day
+@phy_const minute "minute" 60.
+@phy_const hour "hour" 3600.
+@phy_const day "day" 24 * hour
+@phy_const week "week" 7 * day
+@phy_const month "month" 30 * day
+@phy_const yr "year" 365 * day
 
-@physics_const bar "bar" 1e5
-@physics_const pound "pound" 0.45359237
-@physics_const psi "pound per square inche" pound / inch^2
+@phy_const bar "bar" 1e5
+@phy_const pound "pound" 0.45359237
+@phy_const psi "pound per square inche" pound / inch^2
 
-@physics_const mmHg "millimeter mercury pressure" 13.5951 * g_0
+@phy_const mmHg "millimeter mercury pressure" 13.5951 * g_0
 @const_alias torr mmHg
 
-@physics_const light_year "light year" c * year
+@phy_const light_year "light year" c * year
 @const_alias ly light_year
 
-@physics_const Julian_year "Julian year" 31557600.0
+@phy_const Julian_year "Julian year" 31557600.0
