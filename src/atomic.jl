@@ -16,6 +16,7 @@
 
 @_include_sub _const
 @_include_sub _ffi
+@_include_sub optics
 
 using Class
 
@@ -97,5 +98,92 @@ export Transition
     function ac_stark(self, freq::Real, I::Real=1.):
         return -(self.__dipole^2 * I / ħ / c_0 / ϵ_0 / 4 / π
                  * (1 / (self.__freq - freq) + 1 / (self.__freq + freq)))
+    end
+end
+
+export ODT
+
+@class ODT <: optics.Focus begin
+    __trans::Array{Transition}
+    __P::Real
+    __m::Real
+    function __class_init__(self, trans, power::Real, mass::Real; kws...)
+        @method_chain __class_init__(self; kws...)
+        self.__trans = Transition[trans...]
+        self.__P = power
+        self.__m = mass
+    end
+    function __class_init__(self, trans::Transition, power::Real,
+                            mass::Real; kws...)
+        @method_chain __class_init__(self; kws...)
+        self.__trans = Transition[trans]
+        self.__P = power
+        self.__m = mass
+    end
+
+    function __ac_stark(self, I::Real=1)
+        return sum(self.__trans) do t
+            t.ac_stark(self.freq(), I)
+        end
+    end
+
+    function power(self)
+        return self.__P
+    end
+
+    function focus_I(self)
+        return self.focus_I(self, self.__P)
+    end
+
+    function depth(self)
+        return self.__ac_stark(self.focus_I())
+    end
+
+    function depth_f(self)
+        return self.depth() / h
+    end
+
+    function depth_omega(self)
+        return self.depth() / ħ
+    end
+
+    function trap_omega_l(self)
+        return 2 / self.radius_l() * sqrt(self.depth() / self.__m)
+    end
+
+    function trap_omega_r(self)
+        return 2 / self.radius_r() * sqrt(self.depth() / self.__m)
+    end
+
+    function trap_freq_l(self)
+        return self.trap_omega_l() / (2π)
+    end
+
+    function trap_freq_r(self)
+        return self.trap_omega_r() / (2π)
+    end
+
+    function z0_l(self)
+        return sqrt(ħ / 2 / self.__m / self.trap_omega_l())
+    end
+
+    function z0_r(self)
+        return sqrt(ħ / 2 / self.__m / self.trap_omega_r())
+    end
+
+    function eta_l(self, lamb)
+        return 2π / lamb * self.z0_l()
+    end
+
+    function eta_r(self, lamb)
+        return 2π / lamb * self.z0_r()
+    end
+
+    function nmax_r(self)
+        return self.depth_f() / self.trap_freq_r() / 2
+    end
+
+    function nmax_l(self)
+        return self.depth_f() / self.trap_freq_l() / 2
     end
 end

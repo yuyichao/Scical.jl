@@ -64,5 +64,6 @@ end
 @_include_sub atomic
 @_include_sub astro
 @_include_sub optics
+@_include_sub atom_mass
 
 end

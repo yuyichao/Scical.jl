@@ -54,7 +54,7 @@ using Scical
         self.__class_init__(Dict{Symbol, Any}(_kws))
     end
 
-    function focus_I(self, P)
+    function focus_I(self, P::Real)
         # Intensity at the center of the focus with power P.
         return P * π / (self.__lamb * self.__fnum)^2
     end
@@ -81,6 +81,10 @@ using Scical
 
     function lamb(self)
         return self.__lamb
+    end
+
+    function freq(self)
+        return c_0 / self.__lamb
     end
 
     function fnum(self)

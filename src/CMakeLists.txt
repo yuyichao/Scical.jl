@@ -9,7 +9,8 @@ set(Scical_SRCS
   _ffi.jl
   phy_const.jl
   optics.jl
-  astro.jl)
+  astro.jl
+  atom_mass.jl)
 
 cmake_utils_install_files("${julia_path}/Scical/src"
   FILES: ${Scical_SRCS})
