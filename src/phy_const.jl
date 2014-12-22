@@ -18,44 +18,39 @@ export @phy_const, PhyConsts
 
 importall Base
 
-abstract PhyConstBase <: Real
-
-immutable PhyConst{T<:Real} <: PhyConstBase
-    v::T
+immutable PhyConst <: Real
+    v::Float64
     name::String
 end
 
-const PhyConsts = Dict{String, PhyConstBase}()
+const PhyConsts = Dict{String, PhyConst}()
 
-function show(io::IO, x::PhyConstBase)
+function show(io::IO, x::PhyConst)
     return print(io, "$(x.name) = $(x.v)")
 end
 
-promote_rule{T}(::Type{PhyConst{T}},
-                ::Type{Float32}) = promote_type(T, Float32)
+promote_rule(::Type{PhyConst}, ::Type{Float32}) = Float64
 
-promote_rule{T1, T2}(::Type{PhyConst{T1}},
-                     ::Type{PhyConst{T2}}) = promote_type(T1, T2)
+promote_rule(::Type{PhyConst}, ::Type{PhyConst}) = Float64
 
-promote_rule{T1, T2<:Number}(::Type{PhyConst{T1}},
-                             ::Type{T2}) = promote_type(T1, T2)
+promote_rule{T<:Number}(::Type{PhyConst}, ::Type{T}) = promote_type(Float64, T)
 
 convert{T<:Union(Float16, Float32, Float64)}(::Type{T},
-                                             x::PhyConstBase) = convert(T, x.v)
+                                             x::PhyConst) = convert(T, x.v)
 
 convert{T<:Real}(::Type{Complex{T}},
-                 x::PhyConstBase) = convert(Complex{T}, x.v)
+                 x::PhyConst) = convert(Complex{T}, x.v)
 
 convert{T<:Integer}(::Type{Rational{T}},
-                    x::PhyConstBase) = convert(Rational{T}, x.v)
+                    x::PhyConst) = convert(Rational{T}, x.v)
 
-==(x1::PhyConstBase, x2::PhyConstBase) = (x1.v == x2.v)
+==(x1::PhyConst, x2::PhyConst) = (x1.v == x2.v)
 
-hash(x::PhyConstBase, h::UInt) = hash(x.v, h)
+hash(x::PhyConst, h::UInt) = hash(x.v, h)
 
--(x::PhyConstBase) = -x.v
+-(x::PhyConst) = -x.v
 for op in Symbol[:+, :-, :*, :/, :^]
-    @eval $op(x::PhyConstBase, y::PhyConstBase) = $op(x.v, y.v)
+    @eval $op(x::PhyConst, y::PhyConst) = $op(x.v, y.v)
 end
 
 macro const_alias(new_name, orig_name)
@@ -92,10 +87,10 @@ macro phy_const(var, name, val)
     end
 end
 
-big(x::PhyConstBase) = convert(BigFloat, x)
+big(x::PhyConst) = convert(BigFloat, x)
 
 # Align along = for nice Array printing
-function Base.alignment(x::PhyConstBase)
+function Base.alignment(x::PhyConst)
     m = match(r"^(.*?)(=.*)$", sprint(Base.showcompact_lim, x))
     m == nothing ? (length(sprint(Base.showcompact_lim, x)), 0) :
     (length(m.captures[1]), length(m.captures[2]))
