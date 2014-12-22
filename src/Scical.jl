@@ -62,5 +62,7 @@ end
 @_include_sub units
 @_include_sub _const
 @_include_sub atomic
+@_include_sub astro
+@_include_sub optics
 
 end
