@@ -35,9 +35,9 @@ promote_rule(::Type{PhyConst}, ::Type{PhyConst}) = Float64
 
 promote_rule{T<:Number}(::Type{PhyConst}, ::Type{T}) = promote_type(Float64, T)
 
+convert(::Type{FloatingPoint}, x::PhyConst) = convert(FloatingPoint, x.v)
 convert{T<:Union(Float16, Float32, Float64)}(::Type{T},
                                              x::PhyConst) = convert(T, x.v)
-
 convert{T<:Real}(::Type{Complex{T}},
                  x::PhyConst) = convert(Complex{T}, x.v)
 
