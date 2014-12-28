@@ -14,16 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-export Focus
-
 module optics
+
+export Focus
 
 using Class
 using Scical
 
 @class Focus begin
-    __fnum::Real
-    __lamb::Real
+    __fnum::Float64
+    __lamb::Float64
 
     function __init_theta(self, sin_t::Real)
         self.__fnum = sqrt(1 / sin_t^2 - 1)

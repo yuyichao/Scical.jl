@@ -43,19 +43,19 @@ end
 
 export sideband_strength, sideband_scatter_strength
 
-function sideband_strength(n1, n2, eta)
+function sideband_strength(n1::Real, n2::Real, eta::Real)
     return _ffi_harmonic_recoil(n1, n2, eta)
 end
 
-function sideband_scatter_strength(n1, n2, eta, theta0)
+function sideband_scatter_strength(n1::Real, n2::Real, eta::Real, theta0::Real)
     return _ffi_harmonic_scatter(n1, n2, eta, theta0)
 end
 
 export Transition
 
 @class Transition begin
-    __freq::Real
-    __dipole::Real
+    __freq::Float64
+    __dipole::Float64
 
     function __class_init__(self, kws::Dict{Symbol, Any})
         if haskey(kws, :freq)
@@ -105,8 +105,8 @@ export ODT
 
 @class ODT <: optics.Focus begin
     __trans::Array{Transition}
-    __P::Real
-    __m::Real
+    __P::Float64
+    __m::Float64
     function __class_init__(self, trans, power::Real, mass::Real; kws...)
         @method_chain __class_init__(self; kws...)
         self.__trans = Transition[trans...]
