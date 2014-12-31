@@ -13,5 +13,4 @@ set_target_properties(scical PROPERTIES
   PREFIX ""
   OUTPUT_NAME "_scical")
 
-install(TARGETS scical
-  DESTINATION "${julia_path}/Scical/src")
+install(TARGETS scical DESTINATION "${JULIA_LIB_PATH}")

@@ -15,8 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @_init_func function ()
-    global const _scical_lib = find_library(["_scical"],
-                                            [dirname(@__FILE__)])
+    global const _scical_lib = dlopen("_scical")
 end
 
 function _ffi_genlaguerre(n::Real, m::Real, x::Real)
