@@ -108,14 +108,14 @@ export ODT
     __P::Float64
     __m::Float64
     function __class_init__(self, trans, power::Real, mass::Real; kws...)
-        @method_chain __class_init__(self; kws...)
+        @mchain __class_init__(self; kws...)
         self.__trans = Transition[trans...]
         self.__P = power
         self.__m = mass
     end
     function __class_init__(self, trans::Transition, power::Real,
                             mass::Real; kws...)
-        @method_chain __class_init__(self; kws...)
+        @mchain __class_init__(self; kws...)
         self.__trans = Transition[trans]
         self.__P = power
         self.__m = mass
