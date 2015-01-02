@@ -1,8 +1,7 @@
 set(scical_SRCS
   math.cpp)
 
-add_library(scical SHARED
-  ${scical_SRCS})
+add_library(scical SHARED ${scical_SRCS})
 
 # target_link_libraries(scical)
 

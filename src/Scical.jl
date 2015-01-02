@@ -34,13 +34,10 @@ macro _include_sub(mod)
     cur_file = current_module().eval(:(@__FILE__))
     full_path = abspath(joinpath(dirname(cur_file), mod_path))
     if full_path in _included_files
-        quote
-        end
+        nothing
     else
         push!(_included_files, full_path)
-        quote
-            $(esc(:include))($mod_path)
-        end
+        Expr(:call, include, mod_path)
     end
 end
 
@@ -59,11 +56,11 @@ macro _init_func(ex)
 end
 
 @_include_sub formatter
-@_include_sub units
 @_include_sub _const
+@_include_sub units
+@_include_sub optics
 @_include_sub atomic
 @_include_sub astro
-@_include_sub optics
 @_include_sub atom_mass
 
 end
