@@ -60,28 +60,17 @@ macro const_alias(new_name, orig_name)
     end
 end
 
-macro phy_const(var, name, val)
-    if !isa(val, Real)
-        val = current_module().eval(val)
-    end
-    if !isa(val, FloatingPoint)
-        val = float(val)
-    end
-
-    sym = Symbol(name)
-    evar = esc(var)
+macro phy_const(sym, name, val)
     esym = esc(sym)
-    qsym = esc(Expr(:quote, sym))
-    str = "$name = $val"
-    def_alias = if sym != var
+    def_alias = if Base.isidentifier(name) && name != string(sym)
         quote
-            @const_alias $evar $esym
+            @const_alias $(Symbol(name)) $esym
         end
     else
         esc(Expr(:export, sym))
     end
     return quote
-        const $esym = PhyConst($val, $name)
+        const $esym = PhyConst(float($val), $name)
         $def_alias
         PhyConsts[$name] = $esym
     end
